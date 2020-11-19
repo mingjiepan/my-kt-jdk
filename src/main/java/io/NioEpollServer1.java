@@ -1,4 +1,4 @@
-package nio;
+package io;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -6,10 +6,11 @@ import java.nio.channels.*;
 import java.util.Set;
 
 /**
+ * nio多路复用器
  * @author panmingjie
  * @date 2020/11/16 10:24
  */
-public class Server1 {
+public class NioEpollServer1 {
     public static void main(String[] args) throws Exception {
         //epoll_create
         Selector selector = Selector.open();
