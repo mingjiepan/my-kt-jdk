@@ -2,10 +2,10 @@ package io;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -23,25 +23,33 @@ public class Client1 {
         Selector selector = Selector.open();
         socketChannel.register(selector, SelectionKey.OP_CONNECT);
         while (true) {
-            selector.select();
-            Set<SelectionKey> selectionKeys = selector.selectedKeys();
-            for(SelectionKey selectionKey : selectionKeys) {
-                SelectableChannel selectableChannel = selectionKey.channel();
-                if (selectionKey.isConnectable()) {
-                    SocketChannel channel = (SocketChannel) selectableChannel;
-                    if (channel.finishConnect()) {
-                        channel.configureBlocking(false);
-                        channel.register(selector, SelectionKey.OP_WRITE);
+            int select = selector.select();
+            if (select > 0) {
+                Set<SelectionKey> selectionKeys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = selectionKeys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey selectionKey = iterator.next();
+                    socketChannel = (SocketChannel) selectionKey.channel();
+                    if (selectionKey.isConnectable()) {
+                        boolean finishConnect = socketChannel.finishConnect();
+                        if (finishConnect) {
+                            String str = "send from client : hello server, i'm client";
+                            ByteBuffer byteBuffer = ByteBuffer.wrap(str.getBytes());
+                            socketChannel.configureBlocking(false);
+                            socketChannel.register(selector, SelectionKey.OP_READ);
+                            socketChannel.write(byteBuffer);
+                            byteBuffer.clear();
+                            byteBuffer = null;
+                        }
+                    } else if (selectionKey.isReadable()) {
+                        ByteBuffer byteBuffer = ByteBuffer.allocate(100);
+                        socketChannel.read(byteBuffer);
+                        System.out.println("receive from server : " + new String(byteBuffer.array()));
+                        byteBuffer.clear();
+                        byteBuffer = null;
+//                        selectionKey.cancel();
                     }
-                }
-                else if (selectionKey.isReadable()) {
-                    ByteBuffer readBuffer = ByteBuffer.allocate(100);
-                    SocketChannel sc = (SocketChannel) selectableChannel;
-                    sc.read(readBuffer);
-                    System.out.println("read from server message : " + new String(readBuffer.array()));
-                } else if (selectionKey.isWritable()) {
-                    /*SocketChannel sc = (SocketChannel) selectableChannel;
-                    sc.write(ByteBuffer.wrap("你好，服务端".getBytes()));*/
+                    iterator.remove();
                 }
             }
         }
