@@ -12,6 +12,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    implementation("io.netty:netty-all:4.1.54.Final")
 }
 
 
