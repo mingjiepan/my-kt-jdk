@@ -1,5 +1,6 @@
 package com.mjie.netty;
 
+import com.mjie.netty.handler.MyAcceptHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInboundHandler;
@@ -11,7 +12,7 @@ public class NettyServer2 {
         NioEventLoopGroup boosGroup = new NioEventLoopGroup(2);
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(2);
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        ChannelFuture future = serverBootstrap.group(boosGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(null).bind(8899);
+        ChannelFuture future = serverBootstrap.group(boosGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new MyAcceptHandler()).bind(8899);
         future.channel().closeFuture().sync();
     }
 }
