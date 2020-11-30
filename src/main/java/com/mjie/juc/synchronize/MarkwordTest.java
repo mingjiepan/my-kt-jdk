@@ -1,4 +1,4 @@
-package com.mjie.synchronize;
+package com.mjie.juc.synchronize;
 
 import org.openjdk.jol.info.ClassLayout;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MarkwordTest {
     public static void main(String[] args)throws Exception {
-        //当程序启动先睡眠5秒钟后，加synchronized的对象，就不是自旋锁，而是偏向锁
+        //当程序启动先睡眠5秒钟后，jvm就会开启偏向锁
         TimeUnit.SECONDS.sleep(5);
 
         //普通对象
@@ -35,6 +35,10 @@ public class MarkwordTest {
             printable = ClassLayout.parseInstance(t).toPrintable();
             System.out.println(printable);
         }
+
+        //t.hashCode之后，hashCode值也会写在markWord，并且不会再改变了
+        t.hashCode();
+        System.out.println(ClassLayout.parseInstance(t).toPrintable());
     }
     static class TT {
         int m;
