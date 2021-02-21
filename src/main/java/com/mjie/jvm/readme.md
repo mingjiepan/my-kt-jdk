@@ -1,0 +1,2 @@
+
+java -XX:+PrintCommandLineFlags -version

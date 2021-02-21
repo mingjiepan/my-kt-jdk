@@ -37,7 +37,7 @@ public class NioEpollServer1 {
     }
 
     private void start() {
-        while (true) {
+        for(;;) {
             try {
                 //epoll_wait(1)
                 int select = selector.select();
@@ -53,6 +53,7 @@ public class NioEpollServer1 {
                         } else if (selectionKey.isWritable()) {
                             handleWritable(selectionKey);
                         }
+                        //当处理完事件之后，需要移除到，不然会导致下次select时，重复处理
                         iterator.remove();
                     }
                 }
@@ -64,8 +65,10 @@ public class NioEpollServer1 {
     private void handleAccept(SelectionKey selectionKey) {
         try {
             serverSocketChannel = (ServerSocketChannel) selectionKey.channel();
+            //int fd = accept(epfd)
             SocketChannel socketChannel = serverSocketChannel.accept();
             socketChannel.configureBlocking(false);
+            //epoll_ctl(add, fd, epfd, read | write)
             socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
         } catch (Exception ex) {
             ex.printStackTrace();
