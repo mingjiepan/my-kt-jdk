@@ -10,12 +10,12 @@ import java.net.InetSocketAddress;
 
 public class NettyServer1 {
     public static void main(String[] args) throws Exception {
-        NioEventLoopGroup thread = new NioEventLoopGroup(1);
+        /*NioEventLoopGroup thread = new NioEventLoopGroup(1);
         NioServerSocketChannel serverSocketChannel = new NioServerSocketChannel();
         thread.register(serverSocketChannel);
         ChannelPipeline p = serverSocketChannel.pipeline();
         p.addLast(null);
         ChannelFuture bind = serverSocketChannel.bind(new InetSocketAddress(8899));
-        bind.sync().channel().closeFuture().sync();
+        bind.sync().channel().closeFuture().sync();*/
     }
 }

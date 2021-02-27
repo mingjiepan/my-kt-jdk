@@ -10,11 +10,24 @@ repositories {
     mavenCentral()
 }
 
+
+//依赖包的版本号管理
+val feignVersion = "11.0"
+val feignFormVersion = "3.8.0"
+val nettyVersion = "4.1.54.Final"
+val jolVersion = "0.14"
+
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     // https://mvnrepository.com/artifact/io.netty/netty-all
-    implementation("io.netty:netty-all:4.1.54.Final")
-    implementation("org.openjdk.jol:jol-core:0.14")
+    implementation("io.netty:netty-all:${nettyVersion}")
+    implementation("org.openjdk.jol:jol-core:${jolVersion}")
+    implementation("io.github.openfeign:feign-httpclient:${feignVersion}")
+    implementation("io.github.openfeign:feign-jackson:${feignVersion}")
+    implementation("io.github.openfeign:feign-core:${feignVersion}")
+    implementation("io.github.openfeign:feign-hystrix:${feignVersion}")
+    implementation("io.github.openfeign:feign-slf4j:${feignVersion}")
+    implementation("io.github.openfeign.form:feign-form:${feignFormVersion}")
 }
 
 
